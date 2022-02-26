@@ -32,7 +32,10 @@ app.post('/users', async (req: Request, res: Response) => {
             return res.status(400).send(`Registro fallido. El nombre ${body.username} ya se encuentra en uso.`);
         }
 
-
+        const password = await bcrypt.hash(body.password, 10);
+        await client.query(queriesJson.insertUser, [ body.username, password ]);
+        logger.info(`User ${body.username} created for ${req.ip}`);
+        res.status(201).send('Usuario creado exitosamente.');
     } catch(err) {
         logger.error(err);
         res.status(500).send('Error completando el registro. Intente de nuevo mas tarde.');
