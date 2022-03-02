@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import express, { NextFunction, Request, Response } from 'express';
 import http from 'http';
 import jwt from 'jsonwebtoken';
@@ -7,7 +9,7 @@ import morganMiddleware from '../utils/logger/morgan';
 
 const app = express();
 const server = http.createServer(app);
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PROXY_PORT;
 
 const filterRequests = (req: Request, res: Response) => {
     const encoding = req.headers['accept-encoding'];
@@ -45,7 +47,7 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
 app.get('/dogs/:id', verifyToken, async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    const response = await fetch(`http://localhost:3002/users/${req.userId}/dogs/${id}`, {
+    const response = await fetch(`http://localhost:${process.env.DOG_PORT}/users/${req.userId}/dogs/${id}`, {
         method: 'GET',
     });
 

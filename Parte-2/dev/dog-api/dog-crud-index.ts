@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import express, { NextFunction, Request, Response } from 'express';
 import http from 'http';
 import logger from '../utils/logger/logger';
@@ -9,7 +11,7 @@ import morganMiddleware from '../utils/logger/morgan';
 
 const app = express();
 const server = http.createServer(app);
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.DOG_PORT;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
