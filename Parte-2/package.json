@@ -5,8 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "run-auth": "ts-node dev/auth-api/auth-index.ts",
-    "run-proxy": "ts-node dev/dog-api/proxy-index.ts"
+    "build": "tsc",
+    "postinstall": "npm run build",
+    "run-auth": "node dist/auth-api/auth-index.js",
+    "run-proxy": "node dist/dog-api/proxy-index.js",
+    "run-service": "node dist/dog-api/dog-crud-index.js"
   },
   "repository": {
     "type": "git",

@@ -13,9 +13,7 @@
             "*": [
                 "node_modules/*"
             ]
-        }
-    },
-    "include": [
-        
-    ]
+        },
+        "listFiles": true,
+    }
 }
