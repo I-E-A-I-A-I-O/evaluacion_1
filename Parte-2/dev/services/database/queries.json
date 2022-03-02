@@ -1,4 +1,4 @@
 {
-    "selectUserByName" : "SELECT user_name FROM users WHERE user_name = $1",
+    "selectUserByName" : "SELECT user_name, user_password FROM users WHERE user_name = $1",
     "insertUser" : "INSERT INTO users(user_name, user_password) VALUES($1, $2)"
 }

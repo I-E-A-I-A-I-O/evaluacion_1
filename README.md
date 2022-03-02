@@ -37,3 +37,51 @@ Puntos a tomar en cuenta:
 
 
 La entrega debe ser en un enlace a un repositorio Github público, ordenado en carpetas a su conveniencia
+
+
+# Solucion
+## Parte 2
+> ### Setup
+1. Instalar los paquetes necesarios
+```shell
+1. cd Parte-2
+2. npm install
+```
+2. Crear la base de datos
+```sql
+CREATE DATABASE dist_sys_ev_1;
+
+CREATE TABLE users(
+    user_id serial PRIMARY KEY,
+    user_name varchar(50),
+    user_password varchar(300)
+);
+
+CREATE TABLE dogs(
+    dog_id serial PRIMARY KEY,
+    dog_name varchar(50),
+    dog_breed varchar(50),
+    dog_age int,
+    dog_owner_id int,
+    CONSTRAINT fk_owner FOREIGN KEY(dog_owner_id) 
+    REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+```
+3. El nombre de usuario y la clave para la base de datos puede ser modificada en el archivo `.env`
+
+> ### Uso
+#### Registro:
+
+```shell
+curl -X POST -H 'Content-Type: application/json' -d '{"username": "{name}", "password": "{password}"}' http://localhost:3000/users
+```
+
+Donde `{name}` y `{password}` son reemplazados por el nombre de usuario y la clave deseadas respectivamente.
+
+#### Login:
+
+```shell
+curl -X POST -H 'Content-Type: application/json' -d '{"password": "{password}"}' http://localhost:3000/users/{name}
+```
+
+Donde `{name}` y `{password}` son reemplazados por el nombre de usuario y la clave deseadas respectivamente.

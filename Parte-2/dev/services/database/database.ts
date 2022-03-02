@@ -2,9 +2,10 @@ import pg from 'pg';
 import logger from '../../utils/logger/logger';
 
 const pool = new pg.Pool({
-    user: 'justdancepc',
+    user: process.env.DB_USERNAME,
     host: 'localhost',
     database: 'dist_sys_ev_1',
+    password: process.env.DB_PASSWORD,
     port: 5432,
     max: 20,
     ssl: {
