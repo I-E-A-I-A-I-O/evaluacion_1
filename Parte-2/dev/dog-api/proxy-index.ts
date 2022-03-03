@@ -61,6 +61,21 @@ app.get('/dogs/:id', verifyToken, async (req: Request, res: Response) => {
     }
 });
 
+app.post('/dogs', verifyToken, async (req: Request, res: Response) => {
+    const response = await fetch(`http://localhost:${process.env.DOG_PORT}/users/${req.userId}/dogs`, {
+        method: 'POST',
+        body: req.body
+    });
+
+    if (response.ok) {
+        const resBody = await response.json();
+        res.status(response.status).json(resBody);
+    }
+    else {
+        const resBody = await response.text();
+        res.status(response.status).send(resBody);
+    }
+});
 
 server.listen(PORT, () => {
     console.info(`Server running on port ${PORT}`);

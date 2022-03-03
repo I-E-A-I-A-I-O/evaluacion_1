@@ -1,5 +1,6 @@
 {
-    "selectUserByName" : "SELECT user_name, user_password FROM users WHERE user_name = $1",
-    "insertUser" : "INSERT INTO users(user_name, user_password) VALUES($1, $2)",
-    "selectByDogId" : "SELECT * FROM dogs WHERE dog_id = $1"
+    "selectUserByName": "SELECT user_name, user_password FROM users WHERE user_name = $1",
+    "insertUser": "INSERT INTO users(user_name, user_password) VALUES($1, $2)",
+    "selectByDogId": "SELECT * FROM dogs WHERE dog_id = $1",
+    "insertDog": "INSERT INTO dogs(dog_name, dog_age, dog_breed, dog_owner_id) VALUES($1, $2, $3, $4) RETURNING dog_id"
 }
