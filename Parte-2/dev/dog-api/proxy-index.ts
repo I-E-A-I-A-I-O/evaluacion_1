@@ -56,10 +56,18 @@ app.get("/dogs", verifyToken, async (req: Request, res: Response) => {
   );
 
   try {
+    const response = await request;
 
+    if (response.headers.get("content-type") === "application/json") {
+      const resBody = await response.json();
+      res.status(response.status).json(resBody);
+    } else {
+      const resBody = await response.text();
+      res.status(response.status).send(resBody);
+    }
   } catch (err) {
     logger.error(err);
-    res.status(500).send('Error ');
+    res.status(500).send('Error obteniendo los registros.');
   }
 });
 
@@ -83,7 +91,7 @@ app.get("/dogs/:id", verifyToken, async (req: Request, res: Response) => {
 });
 
 app.post("/dogs", verifyToken, async (req: Request, res: Response) => {
-  const response = await fetch(
+  const request = fetch(
     `http://localhost:${process.env.DOG_PORT}/users/${req.userId}/dogs`,
     {
       method: "POST",
@@ -94,12 +102,19 @@ app.post("/dogs", verifyToken, async (req: Request, res: Response) => {
     }
   );
 
-  if (response.headers.get("content-type") === "application/json") {
-    const resBody = await response.json();
-    res.status(response.status).json(resBody);
-  } else {
-    const resBody = await response.text();
-    res.status(response.status).send(resBody);
+  try {
+    const response = await request;
+
+    if (response.headers.get("content-type") === "application/json") {
+      const resBody = await response.json();
+      res.status(response.status).json(resBody);
+    } else {
+      const resBody = await response.text();
+      res.status(response.status).send(resBody);
+    }
+  } catch (err) {
+    logger.error(err);
+    res.status(500).send('Error creando el registro.');
   }
 });
 
@@ -109,11 +124,11 @@ app.patch("/dogs/:dogId", verifyToken, async (req: Request, res: Response) => {
   const request = fetch(
     `http://localhost:${process.env.DOG_PORT}/users/${req.userId}/dogs/${dogId}`,
     {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(req.body)
+      method: 'PATCH',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(req.body)
     }
   );
 
@@ -136,18 +151,18 @@ app.patch("/dogs/:dogId", verifyToken, async (req: Request, res: Response) => {
 app.delete("/dogs/:dogId", verifyToken, async (req: Request, res: Response) => {
     const { dogId } = req.params;
     const request = fetch(`http://localhost:${process.env.DOG_PORT}/users/${req.userId}/dogs/${dogId}`, {
-        method: 'DELETE'
+      method: 'DELETE'
     });
 
     try {
         const response = await request;
         
         if (response.headers.get("content-type") === "application/json") {
-            const resBody = await response.json();
-            res.status(response.status).json(resBody);
+          const resBody = await response.json();
+          res.status(response.status).json(resBody);
         } else {
-            const resBody = await response.text();
-            res.status(response.status).send(resBody);
+          const resBody = await response.text();
+          res.status(response.status).send(resBody);
         }
     } catch (err) {
         logger.error(err);

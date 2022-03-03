@@ -22,60 +22,74 @@ const dogOwnershipMiddleware = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { userId, dogId } = req.params;
-  const dbclient = await getClient();
-  const result = await dbclient.query<DogSelect>(queriesJson.selectByDogId, [
-    Number.parseInt(dogId),
-  ]);
+  try {
+    const { userId, dogId } = req.params;
+    const dbclient = await getClient();
+    const result = await dbclient.query<DogSelect>(queriesJson.selectByDogId, [
+      Number.parseInt(dogId),
+    ]);
 
-  if (result.rowCount < 1)
-    return res.status(404).send(`No existe un perro con la id ${dogId}`);
+    if (result.rowCount < 1)
+      return res.status(404).send(`No existe un perro con la id ${dogId}`);
 
-  const dog = result.rows[0];
+    const dog = result.rows[0];
 
-  if (dog.dog_owner_id !== Number.parseInt(userId)) {
-    logger.warn(
-      `User ${userId} tried to access dog ${dog.dog_id} from ${req.ip}`
-    );
-    return res
-      .status(401)
-      .send("No tienes permiso para acceder a los datos de este perro.");
+    if (dog.dog_owner_id !== Number.parseInt(userId)) {
+      logger.warn(
+        `User ${userId} tried to access dog ${dog.dog_id} from ${req.ip}`
+      );
+      return res
+        .status(401)
+        .send("No tienes permiso para acceder a los datos de este perro.");
+    }
+
+    next();
+  } catch (err) {
+    logger.error(err);
+    res.status(500).send('No se pudo completar la peticion. Error verificando permisos.');
   }
-
-  next();
 };
 
 app.get("/users/:userId", async (req: Request, res: Response) => {
-  const { userId } = req.params;
-  const dbclient = await getClient();
-  const result = await dbclient.query<DogSelect>(queriesJson.selectByOwner, [
-    userId,
-  ]);
-  res.status(200).json(result.rows);
+  try {
+    const { userId } = req.params;
+    const dbclient = await getClient();
+    const result = await dbclient.query<DogSelect>(queriesJson.selectByOwner, [
+      userId,
+    ]);
+    res.status(200).json(result.rows);
+  } catch (err) {
+    logger.error(err);
+    res.status(500).send('Error obteniendo los registros.')
+  }
 });
 
 app.get(
   "/users/:userId/dogs/:dogId",
   dogOwnershipMiddleware,
   async (req: Request, res: Response) => {
-    const { userId, dogId } = req.params;
-    const dbclient = await getClient();
-    const result = await dbclient.query<DogSelect>(queriesJson.selectByDogId, [
-      Number.parseInt(dogId),
-    ]);
-    const dog = result.rows[0];
-    res.status(200).json({
-      id: dog.dog_id,
-      name: dog.dog_name,
-      age: dog.dog_age,
-      breed: dog.dog_breed,
-    });
+    try {
+      const { userId, dogId } = req.params;
+      const dbclient = await getClient();
+      const result = await dbclient.query<DogSelect>(queriesJson.selectByDogId, [
+        Number.parseInt(dogId),
+      ]);
+      const dog = result.rows[0];
+      res.status(200).json({
+        id: dog.dog_id,
+        name: dog.dog_name,
+        age: dog.dog_age,
+        breed: dog.dog_breed,
+      });
+    } catch (err) {
+      logger.error(err);
+      res.status(500).send('Error obteniendo el registro.');
+    }
   }
 );
 
 app.post("/users/:userId/dogs", async (req: Request, res: Response) => {
   const { userId } = req.params;
-  const dbclient = await getClient();
   const { dog_age, dog_name, dog_breed } = req.body as DogRequest;
 
   if (!dog_age || !dog_breed || !dog_name)
@@ -86,6 +100,7 @@ app.post("/users/:userId/dogs", async (req: Request, res: Response) => {
       );
 
   try {
+    const dbclient = await getClient();
     const result = await dbclient.query<DogSelect>(queriesJson.insertDog, [
       dog_name,
       dog_age,
