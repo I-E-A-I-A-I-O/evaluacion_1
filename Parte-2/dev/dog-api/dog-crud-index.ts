@@ -108,6 +108,61 @@ app.post("/users/:userId/dogs", async (req: Request, res: Response) => {
   }
 });
 
+app.patch(
+  "/users/:userId/dogs/:dogId",
+  dogOwnershipMiddleware,
+  async (req: Request, res: Response) => {
+    const { userId, dogId } = req.params;
+    const { dog_age, dog_name, dog_breed } = req.body as DogRequest;
+
+    if (!dog_age || !dog_breed || !dog_name)
+      return res
+        .status(400)
+        .send(
+          "Error actualizando los datos. Algunos campos requeridos no fueron proporcionados."
+        );
+
+    try {
+      const dbclient = await getClient();
+      const result = await dbclient.query<DogSelect>(queriesJson.updateDog, [
+        dog_name,
+        dog_age,
+        dog_breed,
+        Number.parseInt(dogId),
+      ]);
+      const dog = result.rows[0];
+      logger.info(`User with id ${userId} deleted dog with id ${dogId} from ${req.ip}`);
+      res.status(200).json({
+        id: dog.dog_id,
+        name: dog.dog_name,
+        age: dog.dog_age,
+        breed: dog.dog_breed,
+      });
+    } catch (err) {
+      logger.error(err);
+      res.status(500).send("Error actualizando los datos.");
+    }
+  }
+);
+
+app.delete(
+  "/users/:userId/dogs/:dogId",
+  dogOwnershipMiddleware,
+  async (req: Request, res: Response) => {
+    const { userId, dogId } = req.params;
+
+    try {
+      const dbclient = await getClient();
+      const result = await dbclient.query(queriesJson.deleteDog, [ dogId ]);
+      logger.info(`User with id ${userId} deleted dog with id ${dogId} from ${req.ip}`);
+      res.status(200).send('Registro borrado exitosamente.');
+    } catch (err) {
+      logger.error(err);
+      res.status(500).send('Error borrando el registro.');
+    }
+  }
+);
+
 server.listen(PORT, () => {
   console.info(`Server running on port ${PORT}`);
 });

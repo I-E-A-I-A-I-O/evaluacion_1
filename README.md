@@ -111,4 +111,8 @@ curl -X GET -H 'authorization: {token}' http://localhost:{PROXY_PORT}/dogs
 Donde `{token}` es el Json Web Token obtenido luego de hacer login y `{PROXY_PORT}` es el puerto asignado en el archivo `.env`
 
 #### Update
+```shell
+curl -X PATCH -H 'authorization: {token}' -H 'content-type: application/json' -d '{"dog_name": "{name}", "dog_age": {age}, "dog_breed": "{breed}"}' http://localhost:{PROXY_PORT}/dogs/{dogId}
+```
 
+Donde `{token}` es el Json Web Token obtenido luego de hacer login, `{name}` es el nombre del perro, `{age}` la edad, `{breed}` la raza y `{PROXY_PORT}` el puerto asignado en el archivo `.env`
