@@ -116,3 +116,17 @@ curl -X PATCH -H 'authorization: {token}' -H 'content-type: application/json' -d
 ```
 
 Donde `{token}` es el Json Web Token obtenido luego de hacer login, `{name}` es el nombre del perro, `{age}` la edad, `{breed}` la raza y `{PROXY_PORT}` el puerto asignado en el archivo `.env`
+
+#### Delete
+```shell
+curl -X DELETE -H 'authorization: {token}' http://localhost:{PROXY_PORT}/dogs/{dogId}
+```
+
+Donde `{token}` es el Json Web Token obtenido luego de hacer login, `{dogId}` es la id del perro a borrar.
+
+### Compresion
+Para obtener la respuesta comprimida se debe incluir el header `-H 'accept-encoding: gzip'` en el comando curl. Ejemplo:
+
+```shell
+curl -X GET -H 'authorization: {token}' -H 'accept-encoding: gzip' http://localhost:{PROXY_PORT}/dogs
+```

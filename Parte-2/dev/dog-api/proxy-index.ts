@@ -48,19 +48,18 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 app.get("/dogs", verifyToken, async (req: Request, res: Response) => {
-  const response = await fetch(
+  const request = fetch(
     `http://localhost:${process.env.DOG_PORT}/users/${req.userId}`,
     {
       method: "GET",
     }
   );
 
-  if (response.headers.get("content-type") === "application/json") {
-    const resBody = await response.json();
-    res.status(response.status).json(resBody);
-  } else {
-    const resBody = await response.text();
-    res.status(response.status).send(resBody);
+  try {
+
+  } catch (err) {
+    logger.error(err);
+    res.status(500).send('Error ');
   }
 });
 
