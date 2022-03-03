@@ -73,15 +73,42 @@ CREATE TABLE dogs(
 #### Registro:
 
 ```shell
-curl -X POST -H 'Content-Type: application/json' -d '{"username": "{name}", "password": "{password}"}' http://localhost:3000/users
+curl -X POST -H 'Content-Type: application/json' -d '{"username": "{name}", "password": "{password}"}' http://localhost:{AUTH_PORT}/users
 ```
 
-Donde `{name}` y `{password}` son reemplazados por el nombre de usuario y la clave deseadas respectivamente.
+Donde `{name}` y `{password}` son reemplazados por el nombre de usuario y la clave deseadas respectivamente. Y `{AUTH_PORT}` es el puerto asignado en el archivo `.env`
 
 #### Login:
 
 ```shell
-curl -X POST -H 'Content-Type: application/json' -d '{"password": "{password}"}' http://localhost:3000/users/{name}
+curl -X POST -H 'Content-Type: application/json' -d '{"password": "{password}"}' http://localhost:{AUTH_PORT}/users/{name}
 ```
 
-Donde `{name}` y `{password}` son reemplazados por el nombre de usuario y la clave deseadas respectivamente.
+Donde `{name}` y `{password}` son reemplazados por el nombre de usuario y la clave deseadas respectivamente. Y `{AUTH_PORT}` es el puerto asignado en el archivo `.env`
+
+#### **CRUD**
+#### Create
+```shell
+curl -X POST -H 'content-type: application/json' -H 'authorization: {token}' -d '{"dog_name": "{name}", "dog_age": {age}, "dog_breed": "{breed}"}' http://localhost:{PROXY_PORT}/dogs
+```
+
+Donde `{token}` es el Json Web Token obtenido luego de hacer login, `{name}` es el nombre del perro, `{age}` la edad, `{breed}` la raza y `{PROXY_PORT}` el puerto asignado en el archivo `.env`
+
+#### Read
+
+1. Por ID
+```shell
+curl -X GET -H 'authorization: {token}' http://localhost:{PROXY_PORT}/dogs/{id}
+```
+
+Donde `{token}` es el Json Web Token obtenido luego de hacer login, `{PROXY_PORT}` es el puerto asignado en el archivo `.env` y `{id}` es la id del perro.
+
+2. Lista de perros del usuario
+```shell
+curl -X GET -H 'authorization: {token}' http://localhost:{PROXY_PORT}/dogs
+```
+
+Donde `{token}` es el Json Web Token obtenido luego de hacer login y `{PROXY_PORT}` es el puerto asignado en el archivo `.env`
+
+#### Update
+

@@ -45,6 +45,15 @@ const dogOwnershipMiddleware = async (
   next();
 };
 
+app.get("/users/:userId", async (req: Request, res: Response) => {
+  const { userId } = req.params;
+  const dbclient = await getClient();
+  const result = await dbclient.query<DogSelect>(queriesJson.selectByOwner, [
+    userId,
+  ]);
+  res.status(200).json(result.rows);
+});
+
 app.get(
   "/users/:userId/dogs/:dogId",
   dogOwnershipMiddleware,
@@ -55,14 +64,12 @@ app.get(
       Number.parseInt(dogId),
     ]);
     const dog = result.rows[0];
-    res
-      .status(200)
-      .json({
-        id: dog.dog_id,
-        name: dog.dog_name,
-        age: dog.dog_age,
-        breed: dog.dog_breed,
-      });
+    res.status(200).json({
+      id: dog.dog_id,
+      name: dog.dog_name,
+      age: dog.dog_age,
+      breed: dog.dog_breed,
+    });
   }
 );
 
@@ -80,22 +87,24 @@ app.post("/users/:userId/dogs", async (req: Request, res: Response) => {
 
   try {
     const result = await dbclient.query<DogSelect>(queriesJson.insertDog, [
-        dog_name,
-        dog_age,
-        dog_breed,
-        userId,
+      dog_name,
+      dog_age,
+      dog_breed,
+      userId,
     ]);
     const dog = result.rows[0];
     logger.info(`Registered dog with id ${dog.dog_id} for user ${userId}`);
     res.status(201).json({
-        id: dog.dog_id,
-        name: dog.dog_name,
-        age: dog.dog_age,
-        breed: dog.dog_breed
+      id: dog.dog_id,
+      name: dog.dog_name,
+      age: dog.dog_age,
+      breed: dog.dog_breed,
     });
   } catch (err) {
     logger.error(err);
-    res.status(500).send('No se pudo completar el registro. Intente de nuevo mas tarde.');
+    res
+      .status(500)
+      .send("No se pudo completar el registro. Intente de nuevo mas tarde.");
   }
 });
 

@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 import compression from 'compression';
 import logger from '../utils/logger/logger';
 import morganMiddleware from '../utils/logger/morgan';
+import fetch from 'node-fetch';
 
 const app = express();
 const server = http.createServer(app);
@@ -44,6 +45,21 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
     });
 };
 
+app.get('/dogs', verifyToken, async (req: Request, res: Response) => {
+    const response = await fetch(`http://localhost:${process.env.DOG_PORT}/users/${req.userId}`, {
+        method: 'GET'
+    });
+
+    if (response.ok) {
+        const resBody = await response.json();
+        res.status(response.status).json(resBody);
+    }
+    else {
+        const resBody = await response.text();
+        res.status(response.status).send(resBody);
+    }
+});
+
 app.get('/dogs/:id', verifyToken, async (req: Request, res: Response) => {
     const { id } = req.params;
 
@@ -64,7 +80,10 @@ app.get('/dogs/:id', verifyToken, async (req: Request, res: Response) => {
 app.post('/dogs', verifyToken, async (req: Request, res: Response) => {
     const response = await fetch(`http://localhost:${process.env.DOG_PORT}/users/${req.userId}/dogs`, {
         method: 'POST',
-        body: req.body
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(req.body)
     });
 
     if (response.ok) {

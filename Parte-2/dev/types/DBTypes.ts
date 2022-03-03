@@ -9,5 +9,5 @@ export interface DogSelect {
     dog_breed: string;
     dog_name: string;
     dog_age: number;
-    dog_owner_id: number;
+    dog_owner_id?: number;
 };

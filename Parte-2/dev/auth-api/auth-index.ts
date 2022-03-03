@@ -74,7 +74,7 @@ app.post('/users/:name', async (req: Request, res: Response) => {
         }
 
         const token = jwt.sign({ id: user.user_id }, process.env.JWT_SECRET, { expiresIn: '2h' });
-        logger.info(`Login successful for user ${name} from ${req.ip}`);
+        logger.info(`Login successful for user ${user.user_id} from ${req.ip}`);
         res.status(201).send(`Inicio de sesion exitoso. Tu token es ${token}`);
     } catch(err) {
         logger.error(err);
