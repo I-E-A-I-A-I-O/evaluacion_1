@@ -130,3 +130,9 @@ Para obtener la respuesta comprimida se debe incluir el header `-H 'accept-encod
 ```shell
 curl -X GET -H 'authorization: {token}' -H 'accept-encoding: gzip' http://localhost:{PROXY_PORT}/dogs
 ```
+
+Dado que la respuesta va a estar comprimida, se debe descomprimir para poder leerla. Para esto, si se esta en linux, se puede utilizar el programa **Gzip**, agregando el comando `| gunzip` luego del comando curl. Ejemplo:
+
+```shell
+curl -X GET -H 'authorization: {token}' -H 'accept-encoding: gzip' http://localhost:{PROXY_PORT}/dogs | gunzip
+```
