@@ -40,6 +40,98 @@ La entrega debe ser en un enlace a un repositorio Github público, ordenado en c
 
 
 # Solucion
+## Parte 1
+### test1.js
+Output:
+```
+new promise
+async function
+nextTick 1
+nextTick 2
+nextTick 3
+then 1
+then 2
+microtask 1
+microtask 2
+timeout 1
+timeout 2
+immediate 1
+immediate 2
+```
+Explicacion:
+
+El script comienza ejecutando la funcion dentro del constructor de la promesa que tiene el output **new promise**, y luego incluye el callback de la promesa creada en la cola de ejecucion.
+
+Luego se ejecuta la funcion asincrona `foo`, que tiene el output **async function** y se incluye el callback de la promesa en la cola de ejecucion.
+
+Luego lee el primer `set immediate`, pero como aun hay funciones pendientes, se incluye en la cola de ejecucion.
+
+Luego se lee el primer `set timeout`, e igualmente, se incluye en la cola de ejecucion al haber callbacks pendientes.
+
+Despues, se lee la funcion `next tick`, que es ejecutada inmediatamente.
+
+Se sigue bajando y se leen las funciones `queueMicrotask`, `setTimeout` y `setImmediate`. Despues de esto, estan otros dos `nextTick`, que se ejecutan inmediatamente.
+
+Al final, se tiene otro `queueMicrotask`, que se incluye en la cola.
+
+Al terminar de leer, empieza la segunda iteracion. Primero se ejecutan los dos callbacks de las funciones asincronas. Primero la de `new Promise` con el output `then 1`, y despues la de `foo`, con el output `then 2`.
+
+Al no haber callbacks pendientes, se ejecutan primero los dos `queueMicrotask` con los outputs `microtask 1` y `microtask 2`.
+
+Al final solo quedan pendiente los `setTimeout` y `setImmediate`. Al ya haber transcurrido el tiempo minimo para ejecutar los `setTimeout` (0 ms), entonces estos ya estan listos para ejecutarse al igual que los `setImmediate`. El orden de ejecucion de estos depende del rendimiento del script.
+
+### test2.js
+Output:
+```
+new promise
+async function
+nextTick 1
+nextTick 2
+nextTick 3
+then 1
+then 2
+microtask 1
+microtask 2
+immediate 1
+immediate 2
+timeout 1
+timeout 2
+```
+
+Explicacion:
+
+Es el mismo script que el anterior, solo que ahora el codigo esta dentro de una funcion `readFile`, por lo tanto, el output es CASI el mismo.
+
+La diferencia seria, que al estar dentro del scope de una funcion I/O, `setImmediate` siempre se va a ejecutar primero que `setTimeout`.
+
+### test3.mjs
+Output:
+```
+new promise
+async function
+then 1
+then 2
+microtask 1
+microtask 2
+nextTick 1
+nextTick 2
+nextTick 3
+immediate 1
+immediate 2
+timeout 1
+timeout 2
+```
+
+Explicacion:
+
+Este archivo no es un script comun como los otros dos archivos, este es un modulo, denotado por la extension `.mjs`. 
+
+En los modulos se les da prioridad a las promesas y callbacks, y no se ejecutarian las otras funciones hasta que todas las promesas sean completadas. Es por esto que luego de ejecutar las funciones `new promise` y `foo`, se obtienen inmediatamente los outputs `then 1` y `then 2`.
+
+Luego al no tener promesas pendientes, se ejecutan los callbacks `microTask 1` y `microTask 2`, que si. Al ya estar libre de las promesas y callbacks, se procede a la siguiente parte, donde se ejecutan los `nextTick`.
+
+Al haber finalizado la fase actual, se ejecutan los `setImmediate` y `setTimeout`. Al no estar dentro de un ciclo I/O, el orden de ejecucion entre estos dos puede variar.
+
 ## Parte 2
 > ### Setup
 1. Instalar los paquetes necesarios

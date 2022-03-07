@@ -1,4 +1,4 @@
-new Promise(function (resolve) {
+  new Promise(function (resolve) {
     console.log('new promise')
     resolve()
   }).then(() => {
