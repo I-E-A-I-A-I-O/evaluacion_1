@@ -1,12 +1,16 @@
 CREATE DATABASE dist_sys_ev_1;
 
-CREATE TABLE users(
+CREATE SCHEMA users;
+
+CREATE SCHEMA dogs;
+
+CREATE TABLE users.users(
     user_id serial PRIMARY KEY,
     user_name varchar(50),
     user_password varchar(300)
 );
 
-CREATE TABLE dogs(
+CREATE TABLE dogs.dogs(
     dog_id serial PRIMARY KEY,
     dog_name varchar(50),
     dog_breed varchar(50),

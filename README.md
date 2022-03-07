@@ -50,14 +50,26 @@ La entrega debe ser en un enlace a un repositorio Github público, ordenado en c
 2. Crear la base de datos
 ```sql
 CREATE DATABASE dist_sys_ev_1;
+```
 
-CREATE TABLE users(
+4. Conectarse a la base de datos `\connect dist_sys_ev_1`
+
+5. Crear los esquemas
+```sql
+CREATE SCHEMA users;
+
+CREATE SCHEMA dogs;
+```
+
+6. Crear las tablas
+```sql
+CREATE TABLE users.users(
     user_id serial PRIMARY KEY,
     user_name varchar(50),
     user_password varchar(300)
 );
 
-CREATE TABLE dogs(
+CREATE TABLE dogs.dogs(
     dog_id serial PRIMARY KEY,
     dog_name varchar(50),
     dog_breed varchar(50),
@@ -67,7 +79,8 @@ CREATE TABLE dogs(
     REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 ```
-3. El nombre de usuario y la clave para la base de datos puede ser modificada en el archivo `.env`
+
+7. El nombre de usuario y la clave para la base de datos puede ser modificada en el archivo `.env`
 
 > ### Uso
 #### Registro:

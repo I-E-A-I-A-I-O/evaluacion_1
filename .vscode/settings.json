@@ -1,0 +1,14 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "askForPassword": true,
+            "driver": "PostgreSQL",
+            "name": "base de datos - evaluacion 1 - distribuidos",
+            "database": "dist_sys_ev_1",
+            "username": "justdancepc"
+        }
+    ]
+}

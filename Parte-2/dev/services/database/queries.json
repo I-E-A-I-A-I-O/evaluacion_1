@@ -1,9 +1,9 @@
 {
-    "selectUserByName": "SELECT * FROM users WHERE user_name = $1",
-    "insertUser": "INSERT INTO users(user_name, user_password) VALUES($1, $2)",
-    "selectByDogId": "SELECT * FROM dogs WHERE dog_id = $1",
-    "insertDog": "INSERT INTO dogs(dog_name, dog_age, dog_breed, dog_owner_id) VALUES($1, $2, $3, $4) RETURNING dog_id",
-    "selectByOwner": "SELECT dog_id, dog_name, dog_age, dog_breed FROM dogs WHERE dog_owner_id = $1",
-    "updateDog": "UPDATE dogs SET dog_name = $1, dog_age = $2, dog_breed = $3 WHERE dog_id = $4 RETURNING *",
-    "deleteDog": "DELETE FROM dogs WHERE dog_id = $1"
+    "selectUserByName": "SELECT * FROM users.users WHERE user_name = $1",
+    "insertUser": "INSERT INTO users.users(user_name, user_password) VALUES($1, $2)",
+    "selectByDogId": "SELECT * FROM dogs.dogs WHERE dog_id = $1",
+    "insertDog": "INSERT INTO dogs.dogs(dog_name, dog_age, dog_breed, dog_owner_id) VALUES($1, $2, $3, $4) RETURNING dog_id",
+    "selectByOwner": "SELECT dog_id, dog_name, dog_age, dog_breed FROM dogs.dogs WHERE dog_owner_id = $1",
+    "updateDog": "UPDATE dogs.dogs SET dog_name = $1, dog_age = $2, dog_breed = $3 WHERE dog_id = $4 RETURNING *",
+    "deleteDog": "DELETE FROM dogs.dogs WHERE dog_id = $1"
 }
