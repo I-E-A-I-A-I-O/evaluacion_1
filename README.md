@@ -175,6 +175,20 @@ CREATE TABLE dogs.dogs(
 7. El nombre de usuario y la clave para la base de datos puede ser modificada en el archivo `.env`
 
 > ### Uso
+
+#### Iniciar los servicios
+```shell
+npm run run-auth
+```
+
+```shell
+npm run run-proxy
+```
+
+```shell
+npm run run-service
+```
+
 #### Registro:
 
 ```shell
